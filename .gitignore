@@ -4,5 +4,9 @@
 # Windows nonsense
 thumbs.db
 
+# CLion gibberish
+.idea/
+cmake-build-debug/
+
 # SSID and Password store
 secrets.h
