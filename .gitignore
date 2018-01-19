@@ -1,0 +1,8 @@
+# Mac silliness
+.DS_Store
+
+# Windows nonsense
+thumbs.db
+
+# SSID and Password store
+secrets.h
