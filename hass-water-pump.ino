@@ -12,7 +12,6 @@
 
 MDNSResponder mdns;
 ESP8266WebServer server(80);
-String webPage;
 //----------------------------for local web
 
 int pinout=2;  //for relay, and internal led
@@ -59,14 +58,11 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  //-----------------------------------------add your code here
-  webPage += "<h1>ESP8266 Web Server Pump Switch</h1>";
-
   if (mdns.begin("esp8266", WiFi.localIP())) 
     Serial.println("MDNS responder started");
  
   server.on("/", [](){
-    server.send(200, "text/html", webPage);
+    server.send(200, "text/html", home_page());
   });
   server.on("/pump", HTTP_GET, [](){
     server.send(200, "text/json", response_json());
@@ -93,6 +89,15 @@ String response_json() {
     return "{\"is_active\": \"" + is_active + "\"}";
 }
 
+String home_page() {
+    String status_text = pump_status ? "<span style='color: green'>pumping</span>" : "<span style='color: orange'>idle</span>";
+    return "<h1>ESP8266 Web Server Pump Switch</h1>" +
+           "<p>Pump is " + status_text + "</p>" +
+           "<form action='' method='post'>" +
+           "  <button name='foo' value='upvote'>Toggle Pump</button>" +
+           "</form>";
+}
+
 void pump_toggle() {
     Serial.println("Toggling pump...");
     if (pump_status) 
@@ -114,7 +119,7 @@ void pump_off() {
 
 /**
  * Turn the pump on.
- * /param duration_in_seconds The duration to turn the pump on for.
+ * @param duration_in_seconds The duration to turn the pump on for.
  */
 void pump_on(int duration_in_seconds) {
     Serial.println("Turning pump on");
