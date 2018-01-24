@@ -102,7 +102,7 @@ String response_json() {
 }
 
 String home_page() {
-    String status_text = pump_status ? "<span style='color: green; font-weight: bold;'>pumping</span>" : "<span style='color: orange; font-weight: bold;'>idle</span>";
+    String status_text = pump_status ? "text-success'>pumping" : "text-warning'>idle";
     String data_text = pump_status ? "{\"active\": true, \"duration\": 600}" : "{\"active\": false}";
     String html = "<!DOCTYPE HTML>\n";
     html += "<html lang='en'>\n";
@@ -150,7 +150,7 @@ String home_page() {
     html += "          <div class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom'>\n";
     html += "            <h1 class='h2'>Dashboard</h1>\n";
     html += "          </div>\n";
-    html += "          <p>Pump is <span class='text-success font-weight-bold'>pumping</span></p>\n";
+    html += "          <p>Pump is <span class='font-weight-bold " + status_text + "</span></p>\n";
     html += "          <button type='button' class='btn btn-primary' onclick='onButtonPost();'>Toggle Pump</button>\n";
     html += "        </main>\n";
     html += "      </div>\n";
