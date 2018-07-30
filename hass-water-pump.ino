@@ -77,12 +77,14 @@ void setup() {
     server.send(200, "text/json", response_json());
   });
   server.on("/pump", HTTP_POST, [](){
-    StaticJsonBuffer<200> request_buffer;
-    JsonObject& request = request_buffer.parseObject(server.arg("plain"));
-
-    boolean desired_light_state = request["active"];
+    if(!server.hasArg("active") || server.arg("active") == "true" && !server.hasArg("duration")) {
+      server.send(400, "text/plain", "400: Invalid Request");
+      return;
+    }
+    
+    boolean desired_light_state = server.arg("active") == "true";
     if (desired_light_state) {
-      int duration = request["duration"];
+      int duration = server.arg("duration").toInt();
       pump_on(duration);
     }
     else
@@ -103,7 +105,7 @@ String response_json() {
 
 String home_page() {
     String status_text = pump_status ? "text-success'>pumping" : "text-warning'>idle";
-    String data_text = pump_status ? "{\"active\": true, \"duration\": 600}" : "{\"active\": false}";
+    String data_text = !pump_status ? "{\"active\": true, \"duration\": 600}" : "{\"active\": false}";
     String html = "<!DOCTYPE HTML>\n";
     html += "<html lang='en'>\n";
     html += "  <head>\n";
@@ -120,7 +122,7 @@ String home_page() {
     html += "      function onButtonPost() {\n";
     html += "        $.post({\n";
     html += "          url: '/pump',\n";
-    html += "          data: '" + data_text + "',\n";
+    html += "          data: " + data_text + ",\n";
     html += "          success: function () {\n";
     html += "            location.reload();\n";
     html += "          }\n";
