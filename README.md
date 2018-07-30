@@ -6,5 +6,5 @@ A water pump controller designed for a NodeMCU ESP-12E, to integrate with home a
 
 Add a secrets.h header file to store the Wi-Fi SSID and password;
 
-    char* sid = "";
+    char* ssid = "";
     char* password = "";
